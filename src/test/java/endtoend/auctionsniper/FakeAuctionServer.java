@@ -6,6 +6,7 @@ import org.jivesoftware.smack.packet.Message;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import static auctionsniper.Main.AUCTION_RESOURCE;
 import static java.lang.String.format;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -13,7 +14,6 @@ import static org.junit.Assert.assertThat;
 
 public class FakeAuctionServer {
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
-    public static final String AUCTION_RESOURCE = "Auction";
     public static final String XMPP_HOSTNAME = "localhost";
     public static final String AUCTION_PASSWORD = "auction";
 
