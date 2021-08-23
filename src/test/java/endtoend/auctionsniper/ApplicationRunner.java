@@ -3,7 +3,7 @@ package endtoend.auctionsniper;
 import auctionsniper.Main;
 
 import static auctionsniper.Main.STATUS_JOINING;
-import static auctionsniper.Main.STATUS_LOST;
+import static auctionsniper.ui.MainWindow.STATUS_LOST;
 import static endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME;
 
 public class ApplicationRunner {

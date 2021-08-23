@@ -11,7 +11,6 @@ import javax.swing.*;
 
 public class Main {
     public static final String STATUS_JOINING = "Joining";
-    public static final String STATUS_LOST = "Lost";
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
 
     private static final int ARG_HOSTNAME = 0;
@@ -26,20 +25,31 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Main main = new Main();
-        XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
-        Chat chat = connection.getChatManager().createChat(
-                auctionId(args[ARG_ITEM_ID], connection),
+        main.joinAuction(connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]),
+                args[ARG_ITEM_ID]);
+    }
+
+    private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
+        final Chat chat = connection.getChatManager().createChat(
+                auctionId(itemId, connection),
                 new MessageListener() {
                     @Override
-                    public void processMessage(Chat chat, Message message) {
-                        // nothing yet
+                    public void processMessage(Chat aChat, Message message) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                ui.showStatus(MainWindow.STATUS_LOST);
+                            }
+                        });
                     }
                 }
         );
+        this.notToBeGCd = chat;
+
         chat.sendMessage(new Message());
     }
 
-    private static XMPPConnection connectTo(String hostname, String username, String password) throws XMPPException {
+    private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
         XMPPConnection connection = new XMPPConnection(hostname);
         connection.connect();
         connection.login(username, password, AUCTION_RESOURCE);
@@ -52,6 +62,9 @@ public class Main {
     }
 
     private MainWindow ui;
+
+    @SuppressWarnings("unused")
+    private Chat notToBeGCd;
 
     public Main() throws Exception {
         startUserInterface();
